@@ -21,7 +21,7 @@ SECRET_KEY = 'django-insecure-wu&zz4f)fafv(#lauzgc=2(6*+g*lf_86ofltjk2()nm=b&$1r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['mylwa.pythonanywhere.com']
+ALLOWED_HOSTS = ['organica.onrender.com']
 
 
 # Application definition
@@ -55,6 +55,7 @@ AUTHENTICATION_BACKENDS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',  # Add this line for allauth
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
  
 
@@ -157,12 +159,15 @@ USE_TZ = True
 #Static
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR,'static'),
-                   ]
+if not DEBUG:
+    
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+    STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'static'),]
 
+WHITENOISE_USE_FINDERS =True
 #Media
 MEDIA_URL ='/media/'
 
