@@ -1,0 +1,99 @@
+{% extends 'app1/base.html' %}
+
+{% load static %}
+  
+{% block title %}| Cart{% endblock title %}
+
+{% block content %}
+
+
+
+      <!-- 
+        - #PRODUCT DETAILS
+      -->
+  <main>
+    <article>
+
+      <section class="section product-details">
+        <div class="container">
+       
+          <div class="wrapper">
+
+            <div class="product-details-img">
+
+              <figure class="product-display">
+                <img src="./assets/images/product-details-1.jpg" width="700" height="700" loading="lazy"
+                  alt="Non-starchy vegetables." class="w-100" data-product-display>
+              </figure>
+
+              <ul class="product-thumbnail-list has-scrollbar">
+
+                <li class="product-thumbnail-item">
+                  <img src="./assets/images/product-details-1.jpg" width="700" height="700" loading="lazy"
+                    alt="Non-starchy vegetables." class="w-100" data-product-thumbnail>
+                </li>
+
+                <li class="product-thumbnail-item">
+                  <img src="./assets/images/product-details-2.jpg" width="700" height="700" loading="lazy"
+                    alt="Non-starchy vegetables." class="w-100" data-product-thumbnail>
+                </li>
+
+                <li class="product-thumbnail-item">
+                  <img src="./assets/images/product-details-3.jpg" width="700" height="700" loading="lazy"
+                    alt="Non-starchy vegetables." class="w-100" data-product-thumbnail>
+                </li>
+
+                <li class="product-thumbnail-item">
+                  <img src="./assets/images/product-details-2.jpg" width="700" height="700" loading="lazy"
+                    alt="Non-starchy vegetables." class="w-100" data-product-thumbnail>
+                </li>
+
+              </ul>
+
+            </div>
+
+            <div class="product-details-content">
+
+              <h3 class="product-title">Non-starchy vegetables.</h3>
+
+              <data class="product-price" value="350.00">350.00 USD</data>
+
+              <div class="rating-wrapper">
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star"></ion-icon>
+                <ion-icon name="star"></ion-icon>
+              </div>
+
+              <p class="product-text">
+                .
+              </p>
+
+              <div class="product-weight-wrapper">
+
+                <p class="product-weight-title"> :</p>
+
+                
+
+              </div>
+
+              <div class="product-qty">
+                <input type="number" name="quantity" value="1" min="1" max="50" class="product-qty-input">
+
+                <button class="btn btn-primary product-qty-btn">Add To Cart</button>
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+        </div>
+      </section>
+
+    </article>
+  </main>
+
+

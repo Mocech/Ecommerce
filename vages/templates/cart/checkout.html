@@ -1,0 +1,150 @@
+{% extends "app1/base.html" %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'assets/css/checkout.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" 
+integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+{% endblock extrastyle %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb" class="d-flex justify-content-center">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{% url 'store:home' %}">Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+    </ol>
+</nav>
+
+<div class="container">
+    <form action="#" method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col">
+                <h3 class="title">Billing Address</h3>
+                <div class="inputBox">
+                    <span>Full Name:</span>
+                    <input type="text" name="full_name" required placeholder="John Doe">
+                </div>
+                <div class="inputBox">
+                    <span>Email:</span>
+                    <input type="email" name="email" required placeholder="example@example.com">
+                </div>
+                <div class="inputBox">
+                    <span>Address:</span>
+                    <input type="text" name="address" required placeholder="Room - Street - Locality">
+                </div>
+                <div class="inputBox">
+                    <span>City:</span>
+                    <input type="text" name="city" required placeholder="Mumbai">
+                </div>
+                <div class="flex">
+                    <div class="inputBox">
+                        <span>Zip Code:</span>
+                        <input type="text" name="zip_code" required placeholder="123 456">
+                    </div>
+                </div>
+            </div>
+ <!-- Payment Method Section -->
+ <div class="col">
+    <h3 class="title">Choose Payment Method</h3>
+    <div class="inputBox">
+        <label>
+            <input type="radio" name="payment_method" value="paypal" required> Pay with PayPal
+        </label>
+    </div>
+    <div class="inputBox">
+        <label>
+            <input type="radio" name="payment_method" value="mpesa" required> Lipa Na M-Pesa
+        </label>
+        <img src="{% static 'assets/images/mpesa.png' %}" alt="M-Pesa Logo">
+    </div>
+    <div class="inputBox">
+        <span>Phone Number (for M-Pesa only)</span>
+        <input type="number" name="phone_number" placeholder="+254712345678" id="phone-number">
+    </div>
+</div>
+
+
+        <div class="total">
+            
+            <strong>Total:</strong>
+            <span id="cart-total-price" class="amount">{{ total_price }}</span>
+        </div>
+        
+
+        <input type="submit" value="Proceed to Checkout" class="submit-btn">
+        {% comment %} <a href="{% url 'cart:create_paypal_payment' %}" class="btn btn-primary">Pay with PayPal</a> {% endcomment %}
+    </form>
+</div>    
+
+<script>
+    $(document).ready(function() {
+    $('.submit-btn').click(function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    const paymentMethod = $("input[name='payment_method']:checked").val();
+    const phoneNumber = $('input[name="phone_number"]').val();
+    const amountText = $('#cart-total-price').text().trim();  
+    const amount = parseFloat(amountText.replace(/[^0-9.-]+/g, "")); 
+
+    if (isNaN(amount) || amount <= 0) {
+        alert("Invalid amount.");
+        return;
+    }
+
+    // Proceed with the payment method chosen
+    if (paymentMethod === 'paypal') {
+        // Send AJAX request to create PayPal payment
+        $.ajax({
+            url: "{% url 'cart:create_paypal_payment' %}",
+            method: "POST",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}'  // Include CSRF token
+            },
+            success: function(response) {
+                if (response.approval_url) {
+                    // Redirect to PayPal for approval
+                    window.location.href = response.approval_url;
+                } else {
+                    alert("Error processing PayPal payment.");
+                }
+            },
+            error: function(xhr) {
+                console.error("AJAX error response:", xhr);
+                alert(xhr.responseJSON.error || "Error initiating payment.");
+            }
+        });
+    } else if (paymentMethod === 'mpesa') {
+        // Handle M-Pesa payment
+        $.ajax({
+            url: "{% url 'cart:initiate_payment' %}",
+            method: "POST",
+            data: {
+                phone_number: phoneNumber,
+                amount: amount,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    alert(response.message);
+                    window.location.href = "{% url 'store:home' %}";
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function() {
+                alert("Error initiating payment.");
+            }
+        });
+    } else {
+        alert("Please select a payment method.");
+    }
+});
+
+    
+    </script>
+
+{% endblock content %}

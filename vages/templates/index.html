@@ -1,0 +1,184 @@
+{% extends 'app1/base.html' %}
+{% load static %}
+
+{% block extrastyle %}
+  <link rel="stylesheet" href="{% static 'assets/css/cart.css' %}">
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="cart">
+  <div class="container">
+    <div class="grid_12">
+      <h1 class="h1">
+        <a href="#" class="logo">Cart<span class="span logo">({{ cart_items_count }})</span></a>
+      </h1>
+    </div>
+    <ul class="items">
+      {% if aggregated_items %}
+      {% for item in aggregated_items %}
+        <li class="grid_4 item" id="cart-item-{{ item.product.id }}">
+          <!-- Delete button -->
+          <a href="#" class="btn-remove delete-cart-item" data-product-id="{{ item.product.id }}">
+            <i class="far fa-trash-alt"></i>
+          </a>
+          <!-- Product image -->
+          <div class="preview">
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
+          </div>
+          <!-- Product details -->
+          <div class="details" data-price="{{ item.product.price }}">
+            <h3>{{ item.product.name }}</h3>
+            <p>{{ item.product.description }}</p>
+          </div>
+          <!-- Quantity controls and price -->
+          <div class="inner_container">
+            <div class="col_1of2 align-center picker">
+              <p>
+                <!-- Increment quantity -->
+                <a href="#" class="btn-quantity update-cart-item plus" data-product-id="{{ item.product.id }}">
+                  <i class="fas fa-plus"></i>
+                </a>
+                <!-- Quantity display -->
+                <div class="col_1of2 quantity-text">
+                  <p>
+                    <span id="item-quantity-{{ item.product.id }}" class="current_quantity">{{ item.quantity }}</span>
+                    {% if item.product.on_sale %}
+                      {{ item.product.sale_price }}
+                    {% else %}
+                      {{ item.product.price }}
+                    {% endif %}
+                  </p>
+                </div>
+                <!-- Decrement quantity -->
+                <a href="#" class="btn-quantity  minus" data-product-id="{{ item.product.id }}">
+                  <i class="fas fa-minus"></i>
+                </a>
+              </p>
+              <!-- Hidden input for JS to handle quantity -->
+              <input type="hidden" id="quantity-input-{{ item.product.id }}" class="quantity_field" 
+                data-price="{{ item.product.sale_price if item.product.on_sale else item.product.price }}" 
+                value="{{ item.quantity }}" />
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+      {% else %}
+        <li class="panel-item">
+          <p class="item-title">Your cart is empty</p>
+        </li>
+      {% endif %}
+    </ul>
+
+    <!-- Cart Summary -->
+    <div class="grid_12 summary">
+      <div class="inner_container">
+        <div class="summary-content">
+          <div class="col_1of2 meta-data">
+            <div class="total">
+              <strong>Total:</strong>
+              <span id="cart-total-price" class="amount">{{ total_price }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="btn-summary">
+          <a href="#" class="btn-checkout btn-reverse">Continue Shopping</a>
+          <a href="#" class="btn-checkout">Checkout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+
+
+
+<!-- your_template_path/cart_summary.html -->
+
+{% extends 'app1/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="cart">
+  <div class="container">
+    <div class="grid_12">
+      <h1 class="h1">
+        <a href="#" class="logo">Cart<span class="span logo">({{ cart_items_count }})</span></a>
+      </h1>
+    </div>
+    <ul class="items">
+      {% if aggregated_items %}
+      {% for item in aggregated_items %}
+        <li class="grid_4 item" id="cart-item-{{ item.product.id }}">
+          <!-- Delete button -->
+          <a href="{% url 'remove_from_cart' item.product.id %}" class="btn-remove">
+            <i class="far fa-trash-alt"></i>
+          </a>
+          <!-- Product image -->
+          <div class="preview">
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
+          </div>
+          <!-- Product details -->
+          <div class="details" data-price="{{ item.product.price }}">
+            <h3>{{ item.product.name }}</h3>
+            <p>{{ item.product.description }}</p>
+          </div>
+          <!-- Quantity controls and price -->
+          <div class="inner_container">
+            <div class="col_1of2 align-center picker">
+              <p>
+                <!-- Increment quantity -->
+                <a href="{% url 'update_cart' item.product.id %}" class="btn-quantity update-cart-item plus">
+                  <i class="fas fa-plus"></i>
+                </a>
+                <!-- Quantity display -->
+                <div class="col_1of2 quantity-text">
+                  <p>
+                    <span id="item-quantity-{{ item.product.id }}" class="current_quantity">{{ item.quantity }}</span>
+                    {% if item.product.on_sale %}
+                      {{ item.product.sale_price }}
+                    {% else %}
+                      {{ item.product.price }}
+                    {% endif %}
+                  </p>
+                </div>
+                <!-- Decrement quantity -->
+                <a href="{% url 'update_cart' item.product.id %}" class="btn-quantity minus">
+                  <i class="fas fa-minus"></i>
+                </a>
+              </p>
+              <!-- Hidden input for JS to handle quantity -->
+              <input type="hidden" id="quantity-input-{{ item.product.id }}" class="quantity_field" 
+                data-price="{{ item.product.sale_price if item.product.on_sale else item.product.price }}" 
+                value="{{ item.quantity }}" />
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+      {% else %}
+        <li class="panel-item">
+          <p class="item-title">Your cart is empty</p>
+        </li>
+      {% endif %}
+    </ul>
+
+    <!-- Cart Summary -->
+    <div class="grid_12 summary">
+      <div class="inner_container">
+        <div class="summary-content">
+          <div class="col_1of2 meta-data">
+            <div class="total">
+              <strong>Total:</strong>
+              <span id="cart-total-price" class="amount">{{ total_price }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="btn-summary">
+          <a href="#" class="btn-checkout btn-reverse">Checkout</a>
+          <a href="#" class="btn-continue btn-reverse">Continue Shopping</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
