@@ -25,27 +25,33 @@ ALLOWED_HOSTS = ['Grocery.onrender.com']
 
 
 # Application definition
-
 INSTALLED_APPS = [
+    # Django built-in apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'store',
-    'cart',
-    'user_authentication',
+    'django.contrib.sites',  # Required for django-allauth
+
+    # Third-party apps
     'crispy_forms',
     'crispy_bootstrap4',
-    'django.contrib.sites',  # required by django-allauth
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    # Uncomment these if needed
     # 'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.twitter',
+
+    # Custom apps
+    'store',
+    'cart',
+    'user_authentication',
 ]
+
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
