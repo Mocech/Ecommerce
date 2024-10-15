@@ -21,13 +21,12 @@ SECRET_KEY = 'django-insecure-wu&zz4f)fafv(#lauzgc=2(6*+g*lf_86ofltjk2()nm=b&$1r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['organica.onrender.com']
+ALLOWED_HOSTS = ['Grocery.onrender.com']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
